@@ -6,12 +6,15 @@ var io = require('socket.io')(server);
 app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function (socket) {
+  // var socketIds = Object.keys(io.engine.clients);
   console.log("a user connected");
+
+  //upon connecting, emit that a new player has joined
+  socket.broadcast.emit('joined', {id: socket.id});
 
   //Send the location of the user's mouse pointer to others
   socket.on("coordinates", function(coordinates){
-  	console.log('recieved coordinates', coordinates);
-    socket.broadcast.emit("otherPlayerMove", { coordinates: coordinates });
+    socket.broadcast.emit("otherPlayerMove", { coordinates: coordinates, id: socket.id });
   });
 
   //Remove that user's pointer

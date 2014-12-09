@@ -1,5 +1,4 @@
 
-
 function makeNewPosition(hm, wm){
     var h =  $('.game').height() - $('.target').height();
     var nh = Math.floor(hm * h);
@@ -20,8 +19,19 @@ function animateDiv(hm, wm){
     $('.target').animate({ top: newCoords[0], left: newCoords[1] });
 };
 
-function getCurrentPosition(){
-    var x = $('.target').css('left');
-    var y = $('.target').css('top');
-    return [x,y];
-}
+function addPlayer(id){
+    var $player = $("<div class='player'></div>");
+    $player.addClass(id);
+    $('.game').append($player);
+};
+
+function movePlayer(id, coordinates){
+    $("." + id).animate({ top: coordinates.y, left: coordinates.x });
+    console.log('moving to', coordinates);
+};
+
+// function getCurrentPosition(){
+//     var x = $('.target').css('left');
+//     var y = $('.target').css('top');
+//     return [x,y];
+// }

@@ -17,14 +17,25 @@
 		    socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
 		});
 
-		socket.on('otherPlayerMove', function(coordinates){
-			console.log('recieved other player coordinates: ', coordinates);
+		socket.on('joined', function(data){
+			console.log('recieved a join event');
+			addPlayer(data.id);
 		});
 
+		socket.on('otherPlayerMove', function(data){
+			console.log('recieved other player move');
+			var id = data.id;
+			var coordinates = data.coordinates;
+			var $players = $('.player');
+			var $otherPlayer = $("." + id);
+			console.log('other player is', $otherPlayer);
+			movePlayer(id, coordinates);
+		});
+
+		//Move the target 
 		socket.on('movement', function(multipliers){
 			animateDiv(multipliers.hm, multipliers.wm);
-			console.log("multipliers: ", multipliers);
-		})
+		});
 
 	</script>
 
