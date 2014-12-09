@@ -1,31 +1,23 @@
-$(document).ready(function(){
-    animateDiv();
-    
-});
 
-function makeNewPosition(){
-    var h =  $('.game').height() - 50;
-    var nh = Math.floor(Math.random() * h);
+
+function makeNewPosition(hm, wm){
+    var h =  $('.game').height() - $('.target').height();
+    var nh = Math.floor(hm * h);
 
     var wWindow = $(window).width();
     var lmargin = parseInt($('.game').css('marginLeft'));
     var rmargin = parseInt($('.game').css('marginRight'));
-    var w = $('.game').width() - 50;
-    var wmax = wWindow - rmargin - 50;
+    var w = $('.game').width() - $('.target').width();
+    var wmax = wWindow - rmargin - $('.target').width();
     var wmin = wWindow - rmargin - w;
-    var nw = Math.random() * (wmax - wmin) + wmin;
+    var nw = wm * (wmax - wmin) + wmin;
     
     return [nh,nw];    
 }
 
-
-function animateDiv(){
-    var newq = makeNewPosition();
-    $('.target').animate({ top: newq[0], left: newq[1] }, function(){
-      animateDiv();        
-    });
-    getCurrentPosition();
-    
+function animateDiv(hm, wm){
+    var newCoords = makeNewPosition(hm,wm);
+    $('.target').animate({ top: newCoords[0], left: newCoords[1] });
 };
 
 function getCurrentPosition(){

@@ -21,6 +21,10 @@
 			console.log('recieved other player coordinates: ', coordinates);
 		});
 
+		socket.on('movement', function(multipliers){
+			animateDiv(multipliers.hm, multipliers.wm);
+			console.log("multipliers: ", multipliers);
+		})
 
 	</script>
 

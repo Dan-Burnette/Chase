@@ -8,14 +8,6 @@ app.use(express.static(__dirname + '/public'));
 io.on('connection', function (socket) {
   console.log("a user connected");
 
-  // Update client screen with current div location
-  // serverEmitter.emit('movement');
-
-  //Everytime it moves recieve a movement event
-  // serverEmitter.on('movement', function(coordinates){
-
-  // });
-
   //Send the location of the user's mouse pointer to others
   socket.on("coordinates", function(coordinates){
   	console.log('recieved coordinates', coordinates);
@@ -29,7 +21,27 @@ io.on('connection', function (socket) {
 
 });
 
-
 server.listen(3000, function() {
 	console.log("Listening on port 3000...");
 });
+
+function makeNewMultipliers(){
+	// height multiplier; width multiplier
+	hm = Math.random();
+	wm = Math.random();
+    return [hm,wm];    
+}
+
+//Send movement information to client
+function moveTarget(){
+    var newMultipliers = makeNewMultipliers();
+	io.emit('movement', {hm: newMultipliers[0], wm: newMultipliers[1]});
+	setTimeout(function(){
+		moveTarget();
+	}, 2000);
+};
+
+// Start the game loop
+function startGame() {
+	moveTarget();
+}
