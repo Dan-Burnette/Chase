@@ -6,15 +6,21 @@ $(document).ready(function(){
 function makeNewPosition(){
     
     // Get viewport dimensions (remove the dimension of the div)
-    var h = $('.target').height() + $('window').height() - 50;
-    var w = $('.target').width() + $('window').width() - 50;
-
+    var h =  $('.game').height() - 50;
     var nh = Math.floor(Math.random() * h);
-    var nw = Math.floor(Math.random() * w);
+
+    var wWindow = $(window).width();
+    var lmargin = parseInt($('.game').css('marginLeft'));
+    var rmargin = parseInt($('.game').css('marginRight'));
+    var w = $('.game').width() - 50;
+    var wmax = wWindow - rmargin;
+    var wmin = wWindow - rmargin - w;
+    var nw = Math.random() * (wmax - wmin) + wmin;
     
     return [nh,nw];    
     
 }
+
 
 function animateDiv(){
     var newq = makeNewPosition();
