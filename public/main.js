@@ -4,8 +4,6 @@ $(document).ready(function(){
 });
 
 function makeNewPosition(){
-    
-    // Get viewport dimensions (remove the dimension of the div)
     var h =  $('.game').height() - 50;
     var nh = Math.floor(Math.random() * h);
 
@@ -13,12 +11,11 @@ function makeNewPosition(){
     var lmargin = parseInt($('.game').css('marginLeft'));
     var rmargin = parseInt($('.game').css('marginRight'));
     var w = $('.game').width() - 50;
-    var wmax = wWindow - rmargin;
+    var wmax = wWindow - rmargin - 50;
     var wmin = wWindow - rmargin - w;
     var nw = Math.random() * (wmax - wmin) + wmin;
     
     return [nh,nw];    
-    
 }
 
 

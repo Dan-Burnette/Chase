@@ -5,22 +5,31 @@ var io = require('socket.io')(server);
 
 app.use(express.static(__dirname + '/public'));
 
-// io.on('connection', function (socket) {
-//   // Get current div location
-//   serverEmitter.emit('movement');
+io.on('connection', function (socket) {
+  console.log("a user connected");
 
-//   //For broadcasting the div location 
-//   serverEmitter.on('movement', function(coordinates){
+  // Update client screen with current div location
+  // serverEmitter.emit('movement');
 
-//   });
+  //Everytime it moves recieve a movement event
+  // serverEmitter.on('movement', function(coordinates){
 
-//   socket.on('disconnect', function () {
-//     io.sockets.emit('user disconnected');
-//   });
+  // });
 
-// });
+  //Send the location of the user's mouse pointer to others
+  // socket.on("coordinate", function(coordinate){
+  // 	console.log('recieved coordinate');
+  //   socket.broadcast.emit("move", { coordinate:coordinate });
+  // });
+
+  //Remove that user's pointer
+  // socket.on('disconnect', function () {
+  //   io.sockets.emit('user disconnected');
+  // });
+
+});
 
 
-app.listen(3000, function() {
+server.listen(3000, function() {
 	console.log("Listening on port 3000...");
 });
