@@ -6,9 +6,9 @@ $(document).ready(function(){
 function makeNewPosition(){
     
     // Get viewport dimensions (remove the dimension of the div)
-    var h = $(window).height() - 50;
-    var w = $(window).width() - 50;
-    
+    var h = $('.target').height() + $('window').height() - 50;
+    var w = $('.target').width() + $('window').width() - 50;
+
     var nh = Math.floor(Math.random() * h);
     var nw = Math.floor(Math.random() * w);
     
@@ -18,8 +18,15 @@ function makeNewPosition(){
 
 function animateDiv(){
     var newq = makeNewPosition();
-    $('.a').animate({ top: newq[0], left: newq[1] }, function(){
+    $('.target').animate({ top: newq[0], left: newq[1] }, function(){
       animateDiv();        
     });
+    getCurrentPosition();
     
 };
+
+function getCurrentPosition(){
+    var x = $('.target').css('left');
+    var y = $('.target').css('top');
+    return [x,y];
+}
