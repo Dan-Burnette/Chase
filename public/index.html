@@ -11,10 +11,13 @@
 
 	<script>
 		var socket = io();
-
+		var mousemoves = 0;
 		// Sending mouse position to others
 		$(document).on("mousemove", function(event){
-		    socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
+			if (mousemoves % 10 == 0) {
+				socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
+			}
+		    mousemoves+=1;
 		});
 
 		socket.on('joined', function(data){

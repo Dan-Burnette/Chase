@@ -26,7 +26,7 @@ function addPlayer(id){
 };
 
 function movePlayer(id, coordinates){
-    $("." + id).animate({ top: coordinates.y, left: coordinates.x });
+    $("." + id).stop().animate({ top: coordinates.y, left: coordinates.x });
     console.log('moving to', coordinates);
 };
 
