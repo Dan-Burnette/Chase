@@ -17,10 +17,10 @@ io.on('connection', function (socket) {
   // });
 
   //Send the location of the user's mouse pointer to others
-  // socket.on("coordinate", function(coordinate){
-  // 	console.log('recieved coordinate');
-  //   socket.broadcast.emit("move", { coordinate:coordinate });
-  // });
+  socket.on("coordinates", function(coordinates){
+  	console.log('recieved coordinates', coordinates);
+    socket.broadcast.emit("otherPlayerMove", { coordinates: coordinates });
+  });
 
   //Remove that user's pointer
   // socket.on('disconnect', function () {

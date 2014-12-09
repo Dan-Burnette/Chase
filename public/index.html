@@ -5,22 +5,26 @@
 	<title>Chase</title>
 	<link rel="stylesheet" href="css/gamestyles.css">
 	<script src="js/jquery.js"> </script>
-	<script src="main.js"> </script>
+    <script src="main.js"> </script>
 	<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
-	<script>
-		var socket = io();
-	</script>
 </head>
 
+	<script>
+		var socket = io();
+
+		// Sending mouse position to others
+		$(document).on("mousemove", function(event){
+		    socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
+		});
+
+		socket.on('otherPlayerMove', function(coordinates){
+			console.log('recieved other player coordinates: ', coordinates);
+		});
+
+
+	</script>
+
 <body>
-<script>
-	//Sending mouse position to others
-	// $(document).on("mousemove", function(event){
-	//     io.emit("coordinate", {x: event.pageX, y: event.pageY});
-	// });
-
-</script>
-
 	<div class="game">
 		<div class="target"> </div>
 	</div>
