@@ -45,3 +45,5 @@ function moveTarget(){
 function startGame() {
 	moveTarget();
 }
+
+startGame();
