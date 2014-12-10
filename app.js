@@ -28,6 +28,9 @@ server.listen(3000, function() {
 	console.log("Listening on port 3000...");
 });
 
+
+var moveCount = 0;
+
 function makeNewMultipliers(){
 	// height multiplier; width multiplier
 	hm = Math.random();
@@ -37,16 +40,26 @@ function makeNewMultipliers(){
 
 //Send movement information to client
 function moveTarget(){
+	moveCount++;
     var newMultipliers = makeNewMultipliers();
 	io.emit('movement', {hm: newMultipliers[0], wm: newMultipliers[1]});
-	setTimeout(function(){
-		moveTarget();
-	}, 2000);
 };
 
-// Start the game loop
-function startGame() {
-	moveTarget();
-}
+// Start the game loop. Speed in ms.
+function playGame(turns, speed) {
+	var turns = turns;
+	var gameLoop = setInterval(function() { 
+		if (moveCount == turns){
+			console.log('ending game loop');
+			io.emit('gameover');
+			clearInterval(gameLoop);
+		}
+		else {
+			moveTarget();
+		}
+	}, speed);
+};
 
-startGame();
+
+
+playGame(10,2000);

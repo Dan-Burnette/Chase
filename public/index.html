@@ -5,14 +5,14 @@
 	<title>Chase</title>
 	<link rel="stylesheet" href="css/gamestyles.css">
 	<script src="js/jquery.js"> </script>
-    <script src="main.js"> </script>
+    <script src="client.js"> </script>
 	<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
 </head>
 
 	<script>
 		var socket = io();
 		var mousemoves = 0;
-		// Sending mouse position to others
+		// Sending mouse position to others every 10th time
 		$(document).on("mousemove", function(event){
 			if (mousemoves % 10 == 0) {
 				socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
@@ -38,6 +38,11 @@
 		//Move the target 
 		socket.on('movement', function(multipliers){
 			animateDiv(multipliers.hm, multipliers.wm);
+		});
+
+		socket.on('endGame', function(){
+			console.log('game is over!');
+			$('.player').remove();
 		});
 
 	</script>
