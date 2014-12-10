@@ -4,52 +4,74 @@
 	<meta charset="utf-8">
 	<title>Chase</title>
 	<link rel="stylesheet" href="css/gamestyles.css">
-	<script src="js/jquery.js"> </script>
-    <script src="client.js"> </script>
+	<script src="js/vendor/jquery.js"> </script>
+    <script src="js/client/clienthelpers.js"> </script>
 	<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
 </head>
 
-	<script>
-		var socket = io();
-		var mousemoves = 0;
-		// Sending mouse position to others every 10th time
-		$(document).on("mousemove", function(event){
-			if (mousemoves % 10 == 0) {
-				socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
-			}
-		    mousemoves+=1;
-		});
-
-		socket.on('joined', function(data){
-			console.log('recieved a join event');
-			addPlayer(data.id);
-		});
-
-		socket.on('otherPlayerMove', function(data){
-			console.log('recieved other player move');
-			var id = data.id;
-			var coordinates = data.coordinates;
-			var $players = $('.player');
-			var $otherPlayer = $("." + id);
-			console.log('other player is', $otherPlayer);
-			movePlayer(id, coordinates);
-		});
-
-		//Move the target 
-		socket.on('movement', function(multipliers){
-			animateDiv(multipliers.hm, multipliers.wm);
-		});
-
-		socket.on('endGame', function(){
-			console.log('game is over!');
-			$('.player').remove();
-		});
-
-	</script>
 
 <body>
 	<div class="game">
 		<div class="target"> </div>
 	</div>
 </body>
+
+
+<script>
+	var socket = io();
+	var score = 0;
+	var mousemoves = 0;
+	// Sending mouse position to others every 10th time
+	$(document).on("mousemove", function(event){
+		if (mousemoves % 10 == 0) {
+			socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
+		}
+	    mousemoves+=1;
+	});
+
+	//Logging successful click events events
+	//Clicks only count if the div 	is STATIONARY!
+	//Lose points if a click misses or if it is moving!
+	//Is this a stupid mechanic? Quite possibly. Lets try it.
+	$('.target').on('click', function(){
+		if( !$(this).is(':animated') ) {
+			console.log('Scored!');
+			score++;
+		}
+		else {
+			score--;
+		}
+	});
+
+	socket.on('joined', function(data){
+		console.log('recieved a join event');
+		addPlayer(data.id);
+	});
+
+	socket.on('otherPlayerMove', function(data){
+		console.log('recieved other player move');
+		var id = data.id;
+		var coordinates = data.coordinates;
+		var $players = $('.player');
+		var $otherPlayer = $("." + id);
+		console.log('other player is', $otherPlayer);
+		movePlayer(id, coordinates);
+	});
+
+	//Move the target 
+	socket.on('movement', function(multipliers) {
+		animateDiv(multipliers.hm, multipliers.wm);
+	});
+
+	socket.on('gameover', function() {
+		socket.emit('submit-score',  { score: score } );
+		$('.game').hide();
+		$('.player').hide();
+		$gameOverMessage = ('<div class="game-over">' + 'you scored ' + score + '</div>');
+		$('body').append($gameOverMessage);
+	});
+
+
+</script>
+
 </html>

@@ -18,9 +18,9 @@ io.on('connection', function (socket) {
   });
 
   //Remove that user's pointer
-  // socket.on('disconnect', function () {
-  //   io.sockets.emit('user disconnected');
-  // });
+  socket.on('disconnect', function () {
+    io.sockets.emit('user disconnected', {id: socket.id});
+  });
 
 });
 
@@ -59,7 +59,5 @@ function playGame(turns, speed) {
 		}
 	}, speed);
 };
-
-
 
 playGame(10,2000);
