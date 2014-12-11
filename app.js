@@ -22,14 +22,16 @@ io.on('connection', function (socket) {
     io.sockets.emit('user disconnected', {id: socket.id});
   });
 
+  socket.on('submit-score', function() {
+
+  });
+
 });
 
 server.listen(3000, function() {
 	console.log("Listening on port 3000...");
 });
 
-
-var moveCount = 0;
 
 function makeNewMultipliers(){
 	// height multiplier; width multiplier
@@ -40,14 +42,14 @@ function makeNewMultipliers(){
 
 //Send movement information to client
 function moveTarget(){
-	moveCount++;
     var newMultipliers = makeNewMultipliers();
 	io.emit('movement', {hm: newMultipliers[0], wm: newMultipliers[1]});
 };
 
 // Start the game loop. Speed in ms.
 function playGame(turns, speed) {
-	var turns = turns;
+	var moveCount = 0;
+	var turns = turns; 
 	var gameLoop = setInterval(function() { 
 		if (moveCount == turns){
 			console.log('ending game loop');
@@ -56,6 +58,7 @@ function playGame(turns, speed) {
 		}
 		else {
 			moveTarget();
+			moveCount++;
 		}
 	}, speed);
 };

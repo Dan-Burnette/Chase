@@ -38,7 +38,8 @@
 			console.log('Scored!');
 			score++;
 		}
-		else {
+		else if (score > 0){
+			console.log('Lost point!');
 			score--;
 		}
 	});
@@ -63,14 +64,18 @@
 		animateDiv(multipliers.hm, multipliers.wm);
 	});
 
+	//When game ends, hide game and players, display scores
 	socket.on('gameover', function() {
 		socket.emit('submit-score',  { score: score } );
 		$('.game').hide();
 		$('.player').hide();
-		$gameOverMessage = ('<div class="game-over">' + 'you scored ' + score + '</div>');
-		$('body').append($gameOverMessage);
+		$scores = ('<div class="game-over">' + 'you scored ' + score + '</div>');
+		$('body').append($scores);
 	});
 
+	socket.on('user disconnected', function(data){
+		$('.'+ data.id).remove();
+	});
 
 </script>
 
