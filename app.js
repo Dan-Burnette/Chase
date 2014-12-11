@@ -4,12 +4,12 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 //Where the server stores all final scores
-var scores = {};
-
+var scores;
+var socketIds;
 app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function (socket) {
-  // var socketIds = Object.keys(io.engine.clients);
+  socketIds = Object.keys(io.engine.clients);
   console.log("a user connected");
 
   //upon connecting, emit that a new player has joined
@@ -22,6 +22,7 @@ io.on('connection', function (socket) {
 
   //Remove that user's pointer
   socket.on('disconnect', function () {
+  	socketIds = Object.keys(io.engine.clients);
     io.sockets.emit('user disconnected', {id: socket.id});
   });
 
@@ -29,7 +30,11 @@ io.on('connection', function (socket) {
   socket.on('submit-score', function(data) {
   	var id = socket.id;
   	scores[id] = data.score;
-    console.log(scores);
+    //if the last score to be submitted (socketIds-1 because server counts as a socket)
+    if (Object.keys(scores).length == socketIds.length-1) {
+    	console.log(scores);
+    	io.sockets.emit('recieve-scores', { scores: scores});
+    }
   });
 
 });
@@ -52,7 +57,7 @@ function moveTarget(){
 	io.emit('movement', {hm: newMultipliers[0], wm: newMultipliers[1]});
 };
 
-// Start the game loop. Speed in ms.
+// Start the game loop. Speed in ms. Resets game variables.
 function playGame(turns, speed) {
 	scores = {};
 	var moveCount = 0;

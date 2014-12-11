@@ -30,33 +30,30 @@
 	    mousemoves+=1;
 	});
 
-	//Logging successful click events events
-	//Clicks only count if the div 	is STATIONARY!
-	//Lose points if a click misses or if it is moving!
-	//Is this a stupid mechanic? Quite possibly. Lets try it.
-	$('.target').on('click', function(){
+	//Click scoring logic
+	//Target must be stationary
+	//if not ==> lose a point
+	$('.target').click(function(){
 		if( !$(this).is(':animated') ) {
-			console.log('Scored!');
-			score++;
+				console.log('Scored!');
+				score++;
 		}
 		else if (score > 0){
-			console.log('Lost point!');
-			score--;
+				console.log('Lost point!');
+				score--;
 		}
 	});
 
+
 	socket.on('joined', function(data){
-		console.log('recieved a join event');
 		addPlayer(data.id);
 	});
 
 	socket.on('otherPlayerMove', function(data){
-		console.log('recieved other player move');
 		var id = data.id;
 		var coordinates = data.coordinates;
 		var $players = $('.player');
 		var $otherPlayer = $("." + id);
-		console.log('other player is', $otherPlayer);
 		movePlayer(id, coordinates);
 	});
 
@@ -70,15 +67,21 @@
 		socket.emit('submit-score',  { score: score } );
 		$('.game').hide();
 		$('.player').hide();
-		$scores = $('<div class="scores">' + 'you scored ' + score + '</div>');
+	});
+
+	socket.on('recieve-scores', function(data) {
+		console.log('in recieve-scores');
+		var scores = data.scores;
+		$scores = $('<div class="score-container"><ul></ul></div>');
+		for (var key in scores){
+			var $score = $('<li>' + scores[key] + '</li>');
+			console.log($score);
+			$scores.append($score);
+		}
 		$('body').append($scores);
 	});
 
-	socket.on('recieve-scores', function() {
-
-	});
-
-	//Remove players from the screen when they disconnect
+	//Remove player from the screen when they disconnect
 	socket.on('user disconnected', function(data){
 		$('.'+ data.id).remove();
 	});
