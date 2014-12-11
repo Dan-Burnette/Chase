@@ -19,6 +19,7 @@
 
 <script>
 	var socket = io();
+
 	var score = 0;
 	var mousemoves = 0;
 	// Sending mouse position to others every 10th time
@@ -69,10 +70,15 @@
 		socket.emit('submit-score',  { score: score } );
 		$('.game').hide();
 		$('.player').hide();
-		$scores = ('<div class="game-over">' + 'you scored ' + score + '</div>');
+		$scores = $('<div class="scores">' + 'you scored ' + score + '</div>');
 		$('body').append($scores);
 	});
 
+	socket.on('recieve-scores', function() {
+
+	});
+
+	//Remove players from the screen when they disconnect
 	socket.on('user disconnected', function(data){
 		$('.'+ data.id).remove();
 	});

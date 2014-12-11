@@ -3,6 +3,9 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
+//Where the server stores all final scores
+var scores = {};
+
 app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function (socket) {
@@ -22,8 +25,11 @@ io.on('connection', function (socket) {
     io.sockets.emit('user disconnected', {id: socket.id});
   });
 
-  socket.on('submit-score', function() {
-
+  //Gather the scores from each socket on the server
+  socket.on('submit-score', function(data) {
+  	var id = socket.id;
+  	scores[id] = data.score;
+    console.log(scores);
   });
 
 });
@@ -48,6 +54,7 @@ function moveTarget(){
 
 // Start the game loop. Speed in ms.
 function playGame(turns, speed) {
+	scores = {};
 	var moveCount = 0;
 	var turns = turns; 
 	var gameLoop = setInterval(function() { 
