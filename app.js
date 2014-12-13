@@ -54,7 +54,7 @@ function makeNewMultipliers(){
 //Send movement information to client
 function moveTarget(){
     var newMultipliers = makeNewMultipliers();
-	io.emit('movement', {hm: newMultipliers[0], wm: newMultipliers[1]});
+	  io.emit('movement', {hm: newMultipliers[0], wm: newMultipliers[1]});
 };
 
 // Start the game loop. Speed in ms. Resets game variables.
@@ -75,4 +75,4 @@ function playGame(turns, speed) {
 	}, speed);
 };
 
-playGame(10,2000);
+playGame(100,2000);

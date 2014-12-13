@@ -19,13 +19,23 @@
 
 <script>
 	var socket = io();
-
 	var score = 0;
 	var mousemoves = 0;
+	var myLeftMargin = parseInt($('.game').css('marginLeft'));
+	var myTopMargin = parseInt($('.game').css('marginTop'));
+	console.log(myLeftMargin);
+	console.log(myTopMargin);
 	// Sending mouse position to others every 10th time
 	$(document).on("mousemove", function(event){
+
 		if (mousemoves % 10 == 0) {
-			socket.emit('coordinates', {x: event.pageX, y: event.pageY} );
+			socket.emit('coordinates', 
+				{
+				x: event.pageX, 
+				y: event.pageY, 
+				lmargin: myLeftMargin,
+				tmargin: myTopMargin
+				});
 		}
 	    mousemoves+=1;
 	});
@@ -44,17 +54,29 @@
 		}
 	});
 
-
 	socket.on('joined', function(data){
 		addPlayer(data.id);
 	});
 
 	socket.on('otherPlayerMove', function(data){
-		var id = data.id;
+		var $otherPlayer = $("." + data.id);
+		//normalize coordinates so people on different screen resolutions will see accurate player cursors
 		var coordinates = data.coordinates;
-		var $players = $('.player');
-		var $otherPlayer = $("." + id);
-		movePlayer(id, coordinates);
+		var lmargin = coordinates.lmargin;
+		var tmargin = coordinates.tmargin;
+		var normalizedX = coordinates.x - lmargin + myLeftMargin;
+		var normalizedY = coordinates.y - tmargin + myTopMargin;
+		//lmargin normalization
+		// var lmarginDifference = Math.abs(parseInt(myLeftMargin) - parseInt(lmargin) );
+		// var normalizedLMargin = myLeftMargin >= lmargin ?  parseInt(myLeftMargin)-parseInt(lmarginDifference) :
+		// 												  parseInt(myLeftMargin)+parseInt(lmarginDifference);
+		// console.log(normalizedLMargin);
+		//tmargin normalization
+
+		var normalizedCoordinates = {x: normalizedX, y: normalizedY};
+		console.log('normalized coords are: ', normalizedCoordinates);
+		//
+		movePlayer(data.id, normalizedCoordinates);
 	});
 
 	//Move the target 
@@ -69,8 +91,8 @@
 		$('.player').hide();
 	});
 
+	//Make a list of all player scores and append to DOM
 	socket.on('recieve-scores', function(data) {
-		console.log('in recieve-scores');
 		var scores = data.scores;
 		$scores = $('<div class="score-container"><ul></ul></div>');
 		for (var key in scores){
