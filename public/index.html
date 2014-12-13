@@ -66,16 +66,7 @@
 		var tmargin = coordinates.tmargin;
 		var normalizedX = coordinates.x - lmargin + myLeftMargin;
 		var normalizedY = coordinates.y - tmargin + myTopMargin;
-		//lmargin normalization
-		// var lmarginDifference = Math.abs(parseInt(myLeftMargin) - parseInt(lmargin) );
-		// var normalizedLMargin = myLeftMargin >= lmargin ?  parseInt(myLeftMargin)-parseInt(lmarginDifference) :
-		// 												  parseInt(myLeftMargin)+parseInt(lmarginDifference);
-		// console.log(normalizedLMargin);
-		//tmargin normalization
-
 		var normalizedCoordinates = {x: normalizedX, y: normalizedY};
-		console.log('normalized coords are: ', normalizedCoordinates);
-		//
 		movePlayer(data.id, normalizedCoordinates);
 	});
 
