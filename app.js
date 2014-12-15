@@ -80,4 +80,4 @@ var playGame = function(turns, speed) {
 	}, speed);
 };
 
-playGame(100,2000);
+playGame(100,3000);

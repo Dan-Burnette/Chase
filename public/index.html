@@ -96,7 +96,7 @@
 
 	//Move the target 
 	socket.on('movement', function(multipliers) {
-		animateDiv(multipliers.hm, multipliers.wm);
+	    animateDiv(multipliers.hm, multipliers.wm);
 		if ($('.target').is(':hover') && startTime != null){
 			$('.target').trigger('mouseleave');
 		}

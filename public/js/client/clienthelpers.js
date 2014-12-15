@@ -16,7 +16,9 @@ function makeNewPosition(hm, wm){
 
 function animateDiv(hm, wm){
     var newCoords = makeNewPosition(hm,wm);
-    $('.target').animate({ top: newCoords[0], left: newCoords[1] });
+    var duration = (Math.random()*3000);
+    console.log('duration is ', duration);
+    $('.target').animate({ top: newCoords[0], left: newCoords[1] }, duration);
 };
 
 function addPlayer(id){
