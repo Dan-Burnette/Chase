@@ -21,7 +21,6 @@
 	var socket = io();
 	var score = 0;
 	var mousemoves = 0;
-	var time = 0;
 	var startTime;
 	var endTime;
 	var myLeftMargin = parseInt($('.game').css('marginLeft'));
@@ -77,7 +76,7 @@
 		endTime = new Date();
 		if (startTime != null){
 			var timeSpent = endTime - startTime;
-			console.log('you spent : ', timeSpent);
+			score+= timeSpent;
 		}
 		startTime = null;
 	});

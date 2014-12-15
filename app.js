@@ -17,7 +17,7 @@ io.on('connection', function (socket) {
 
   //When a new client joins it will request players
   socket.on('request-players', function(){
-    socket.emit('recieve-players', {players: socketIds.slice(1) } );
+    socket.emit('recieve-players', {players: socketIds.slice(0,-1) } );
   });
 
   //Send the location of the user's mouse pointer to others

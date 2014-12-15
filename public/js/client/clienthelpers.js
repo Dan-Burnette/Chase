@@ -30,5 +30,6 @@ var addPlayer = function(id){
 var movePlayer = function(id, coordinates){
     $("." + id).stop().animate({ top: coordinates.y, left: coordinates.x });
     console.log('moving to', coordinates);
+    console.log( $("." + id));
 };
 
