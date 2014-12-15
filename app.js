@@ -11,13 +11,14 @@ app.use(express.static(__dirname + '/public'));
 io.on('connection', function (socket) {
   socketIds = Object.keys(io.engine.clients);
   console.log("a user connected");
+  console.log(socketIds);
 
   //upon connecting, emit that a new player has joined
   socket.broadcast.emit('joined', {id: socket.id});
 
   //When a new client joins it will request players
   socket.on('request-players', function(){
-    socket.emit('recieve-players', {players: socketIds.slice(0,-1) } );
+    socket.emit('recieve-players', {players: socketIds} );
   });
 
   //Send the location of the user's mouse pointer to others
@@ -35,8 +36,7 @@ io.on('connection', function (socket) {
   socket.on('submit-score', function(data) {
   	var id = socket.id;
   	scores[id] = data.score;
-    //if the last score to be submitted (socketIds-1 because server counts as a socket)
-    if (Object.keys(scores).length == socketIds.length-1) {
+    if (Object.keys(scores).length == socketIds.length) {
     	console.log(scores);
     	io.sockets.emit('recieve-scores', { scores: scores});
     }
@@ -46,7 +46,9 @@ io.on('connection', function (socket) {
 
 server.listen(3000, function() {
 	console.log("Listening on port 3000...");
+
 });
+
 
 
 var makeNewMultipliers = function(){
@@ -80,4 +82,4 @@ var playGame = function(turns, speed) {
 	}, speed);
 };
 
-playGame(100,3000);
+playGame(10,3000);
