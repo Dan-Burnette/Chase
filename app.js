@@ -15,6 +15,11 @@ io.on('connection', function (socket) {
   //upon connecting, emit that a new player has joined
   socket.broadcast.emit('joined', {id: socket.id});
 
+  //When a new client joins it will request players
+  socket.on('request-players', function(){
+    socket.emit('recieve-players', {players: socketIds.slice(1) } );
+  });
+
   //Send the location of the user's mouse pointer to others
   socket.on("coordinates", function(coordinates){
     socket.broadcast.emit("otherPlayerMove", { coordinates: coordinates, id: socket.id });
@@ -44,7 +49,7 @@ server.listen(3000, function() {
 });
 
 
-function makeNewMultipliers(){
+var makeNewMultipliers = function(){
 	// height multiplier; width multiplier
 	hm = Math.random();
 	wm = Math.random();
@@ -52,13 +57,13 @@ function makeNewMultipliers(){
 }
 
 //Send movement information to client
-function moveTarget(){
+var moveTarget = function(){
     var newMultipliers = makeNewMultipliers();
 	  io.emit('movement', {hm: newMultipliers[0], wm: newMultipliers[1]});
 };
 
 // Start the game loop. Speed in ms. Resets game variables.
-function playGame(turns, speed) {
+var playGame = function(turns, speed) {
 	scores = {};
 	var moveCount = 0;
 	var turns = turns; 

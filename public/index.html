@@ -21,10 +21,24 @@
 	var socket = io();
 	var score = 0;
 	var mousemoves = 0;
+	var time = 0;
+	var startTime;
+	var endTime;
 	var myLeftMargin = parseInt($('.game').css('marginLeft'));
 	var myTopMargin = parseInt($('.game').css('marginTop'));
-	console.log(myLeftMargin);
-	console.log(myTopMargin);
+
+	//Get all the other player cursors when the client connects
+	socket.emit('request-players');
+	socket.on('recieve-players', function(data){
+		console.log('recieving players ' );
+		data.players.forEach(addPlayer);
+	});
+
+	socket.on('joined', function(data){
+		addPlayer(data.id);
+	});
+
+
 	// Sending mouse position to others every 10th time
 	$(document).on("mousemove", function(event){
 
@@ -54,8 +68,18 @@
 		}
 	});
 
-	socket.on('joined', function(data){
-		addPlayer(data.id);
+	//Scoring time spent hovering over it
+	$('.target').hover(function(){
+		console.log('in');
+		startTime = new Date();
+	}, function(){
+		console.log('out');
+		endTime = new Date();
+		if (startTime != null){
+			var timeSpent = endTime - startTime;
+			console.log('you spent : ', timeSpent);
+		}
+		startTime = null;
 	});
 
 	socket.on('otherPlayerMove', function(data){
@@ -73,6 +97,9 @@
 	//Move the target 
 	socket.on('movement', function(multipliers) {
 		animateDiv(multipliers.hm, multipliers.wm);
+		if ($('.target').is(':hover') && startTime != null){
+			$('.target').trigger('mouseleave');
+		}
 	});
 
 	//When game ends, hide game and players, display scores
